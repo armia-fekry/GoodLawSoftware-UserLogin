@@ -61,7 +61,6 @@ namespace GoodLawSoftware.LoginApi.Service
 
 		public async Task<AuthModel> RegisterAsync(UserRegisterModel registerModel)
 		{
-			
 			if(await _userManager.FindByNameAsync(registerModel.UserName) is not null)
 				return new AuthModel() { Message="This Name Is Used Before,Try Another Name !!"};
 			var user = new User()
@@ -69,6 +68,9 @@ namespace GoodLawSoftware.LoginApi.Service
 				Id=Guid.NewGuid(),
 				UserName = registerModel.UserName,
 				Password=registerModel.Password,
+				FirstName=registerModel.FirstName,
+				LastName=registerModel.LastName,
+				Email=registerModel.Email
 			};
 			var result = await _userManager.CreateAsync(user,registerModel.Password);
 			if (!result.Succeeded)
@@ -77,7 +79,7 @@ namespace GoodLawSoftware.LoginApi.Service
 					Message = string.Join
 					(',', result.Errors.Select(e => e.Description).ToArray())
 				};
-			await _userManager.AddToRoleAsync(user, registerModel.Role);
+			await _userManager.AddToRoleAsync(user, "User");
 			var jwtSecurityToken =await CreateJwtToken(user);
 			return new AuthModel()
 			{
@@ -103,7 +105,7 @@ namespace GoodLawSoftware.LoginApi.Service
 			{
 				new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
 				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-				new Claim(JwtRegisteredClaimNames.Email, "Default@Default.com"),
+				new Claim(JwtRegisteredClaimNames.Email, user.Email.ToString()),
 				new Claim("uid",user.Id.ToString())
 			}
 			.Union(userClaims)

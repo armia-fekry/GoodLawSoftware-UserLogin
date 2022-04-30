@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using GoodLawSoftware.Application.Shared;
+using System.ComponentModel.DataAnnotations;
 
 namespace GoodLawSoftware.LoginApi.Data.AuthModels
 {
@@ -8,9 +9,8 @@ namespace GoodLawSoftware.LoginApi.Data.AuthModels
 		public string LastName { get; set; }
 		[Required, MaxLength(50)]
 		public string UserName { get; set; }
-	
-		[Required, MaxLength(20)]
-		public string Role { get; set; }
 		public string Password { get; set; }
+		[ValidateEmail]
+		public string Email { get; set; }
 	}
 }
