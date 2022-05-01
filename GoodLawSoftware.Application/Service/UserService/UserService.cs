@@ -2,9 +2,9 @@
 using GoodLawSoftware.Application;
 using GoodLawSoftware.Application.IRepositoies;
 using GoodLawSoftware.Application.Shared;
-using JWT_NET_5.Application.Service.UserService.Dto;
+using GoodLawSoftware.Application.Service.UserService.Dto;
 
-namespace JWT_NET_5.Application.Service.UserService
+namespace GoodLawSoftware.Application.Service.UserService
 {
 	public class UserService : IUserService
 	{
@@ -41,7 +41,7 @@ namespace JWT_NET_5.Application.Service.UserService
 
 	public async Task<List<UserDto>> GetAllUsers()
 		{
-			var res = await _unitOfWork.UserRepository.FindAllAsync(e=>e.Id !=default(Guid),new string[]{"Products" });
+			var res = await _unitOfWork.UserRepository.FindAllAsync(e=>e.Id !=default(Guid));
 			if(res is not null && res.ToList().Count >0)
 				return _mapper.Map<List<UserDto>>(res.ToList());
 			return null;

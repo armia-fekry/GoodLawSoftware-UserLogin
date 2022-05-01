@@ -1,6 +1,6 @@
-﻿using GoodLawSoftware.Application.Shared;
-using JWT_NET_5.Application.Service.UserService;
-using JWT_NET_5.Application.Service.UserService.Dto;
+﻿using GoodLawSoftware.Application.Service.UserService;
+using GoodLawSoftware.Application.Service.UserService.Dto;
+using GoodLawSoftware.Application.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

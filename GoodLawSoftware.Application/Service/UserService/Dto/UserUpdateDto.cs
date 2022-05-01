@@ -1,4 +1,4 @@
-﻿namespace JWT_NET_5.Application.Service.UserService.Dto
+﻿namespace GoodLawSoftware.Application.Service.UserService.Dto
 {
 	public class UserUpdateDto:UserDto
     {

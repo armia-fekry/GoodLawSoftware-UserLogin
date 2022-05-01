@@ -1,10 +1,17 @@
 using GoodLawSoftware.Application;
+using GoodLawSoftware.Application.IRepositoies;
+using GoodLawSoftware.Application.Service.UserService;
 using GoodLawSoftware.Infrastructure;
+using GoodLawSoftware.LoginApi.Helper;
+using GoodLawSoftware.LoginApi.Service;
+using GoodLawSoftware.Service;
+using JWT_NET_5.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using System.Configuration;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,13 +21,18 @@ var builder = WebApplication.CreateBuilder(args);
 	.Enrich.FromLogContext()
 	.CreateLogger();
 	builder.Logging.ClearProviders();
-	builder.Logging.AddSerilog(logger); 
+	builder.Logging.AddSerilog(logger);
 #endregion
 // Add services to the container.
+builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
 builder.Services.AddDbContext<GoodLawContext>(opt=>
 			opt.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 builder.Services.AddIdentity<User, IdentityRole<Guid>>()
 	.AddEntityFrameworkStores<GoodLawContext>();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+builder.Services.AddTransient<IUserService,UserService>();
 
 #region JWT Config
 	builder.Services.AddAuthentication(options =>
@@ -59,6 +71,7 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 
+app.UseAuthentication(); 
 app.UseAuthorization();
 
 app.MapControllers();

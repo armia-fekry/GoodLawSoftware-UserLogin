@@ -86,7 +86,7 @@ namespace GoodLawSoftware.LoginApi.Service
 				UserName = user.UserName,
 				UserId=user.Id,
 				IsAuthenticated = true,
-				Roles = new List<string>{registerModel.Role },
+				Roles = new List<string>{"User" },
 				Token=new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
 				ExpireOn=jwtSecurityToken.ValidTo
 			};

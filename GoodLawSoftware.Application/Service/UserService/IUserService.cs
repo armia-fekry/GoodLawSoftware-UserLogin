@@ -1,6 +1,6 @@
-﻿using JWT_NET_5.Application.Service.UserService.Dto;
+﻿using GoodLawSoftware.Application.Service.UserService.Dto;
 
-namespace JWT_NET_5.Application.Service.UserService
+namespace GoodLawSoftware.Application.Service.UserService
 {
 	public interface IUserService
     {
