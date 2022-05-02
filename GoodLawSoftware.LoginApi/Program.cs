@@ -23,6 +23,14 @@ var builder = WebApplication.CreateBuilder(args);
 	builder.Logging.ClearProviders();
 	builder.Logging.AddSerilog(logger);
 #endregion
+
+builder.Services.AddCors(policy =>
+{
+	policy.AddPolicy("CorsPolicy", opt => opt
+		.AllowAnyOrigin()
+		.AllowAnyHeader()
+		.AllowAnyMethod());
+});
 // Add services to the container.
 builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
 builder.Services.AddDbContext<GoodLawContext>(opt=>
@@ -70,7 +78,7 @@ if (app.Environment.IsDevelopment())
 	app.UseSwagger();
 	app.UseSwaggerUI();
 }
-
+app.UseCors("CorsPolicy");
 app.UseAuthentication(); 
 app.UseAuthorization();
 

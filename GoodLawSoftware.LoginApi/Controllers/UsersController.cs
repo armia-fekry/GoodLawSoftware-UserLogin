@@ -24,6 +24,7 @@ namespace JWT_NET_5.Controllers
 		// GET: api/Users
 		[Authorize]
 		[HttpGet("Users")]
+		[AllowAnonymous]
 		public async Task<List<UserDto>> Get()
 		{
 			return await _userService.GetAllUsers();

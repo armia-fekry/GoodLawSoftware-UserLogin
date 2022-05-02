@@ -12,8 +12,8 @@
     "GoodLawSoftware.LoginApi": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "launchUrl": "swagger",
+      "launchBrowser": false,
+      //"launchUrl": "swagger",
       "applicationUrl": "http://localhost:5193",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
