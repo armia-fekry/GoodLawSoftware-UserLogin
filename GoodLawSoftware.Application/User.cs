@@ -15,7 +15,8 @@ namespace GoodLawSoftware.Application
 		{
 
 		}
-		private User(Guid id,string userName,string password)
+		private User(Guid id,string userName,string password,
+			string firstName, string lastName, string email)
 		{
 			AssertionConcern.AssertionAgainstNotNull(id, "Invalid User Id");
 			AssertionConcern.AssertionAgainstNotNullOrEmplty(userName, "Invalid User Name");
@@ -24,10 +25,14 @@ namespace GoodLawSoftware.Application
 			Id = id;
 			UserName = userName;
 			Password = password;
+			FirstName = firstName;
+			LastName = lastName;
+			Email= email;
 		}
-		public static User Create(Guid id, string userName, string password)
+		public static User Create(Guid id, string userName, string password,
+			string firstName,string lastName,string Email)
 		{
-			return new(id, userName, password);
+			return new(id, userName, password,firstName,lastName,Email);
 		}
 		
 

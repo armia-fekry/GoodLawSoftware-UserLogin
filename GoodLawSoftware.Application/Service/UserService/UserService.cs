@@ -3,6 +3,7 @@ using GoodLawSoftware.Application;
 using GoodLawSoftware.Application.IRepositoies;
 using GoodLawSoftware.Application.Shared;
 using GoodLawSoftware.Application.Service.UserService.Dto;
+using Microsoft.Extensions.Logging;
 
 namespace GoodLawSoftware.Application.Service.UserService
 {
@@ -10,22 +11,44 @@ namespace GoodLawSoftware.Application.Service.UserService
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly IMapper _mapper;
-		public UserService(IUnitOfWork unitOfWork, IMapper mapper)
+		private readonly ILogger<UserService> _logger;
+
+		public UserService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<UserService> logger)
 		{
 			_unitOfWork = unitOfWork;
 			_mapper = mapper;
+			_logger = logger;
 		}
 
 
 		public async Task<UserDto> CreateUser(UserCreateDto userCreateDto)
 		{
-			var user = User.Create(Guid.NewGuid(),
-				userCreateDto.UserName,
-				userCreateDto.Password
-				);
-			 await _unitOfWork.UserRepository.AddAsync(user);
-			_unitOfWork.Complete();
-			return _mapper.Map<UserDto>(user);
+			try
+			{
+				var user = User.Create(Guid.NewGuid(),
+					userCreateDto.UserName,
+					userCreateDto.Password,
+					userCreateDto.FisrtName,
+					userCreateDto.LastName,
+					userCreateDto.Email
+					);
+				var founded =  await _unitOfWork.UserRepository
+					.FindAsync(e=>e.UserName==user.UserName);
+				if (founded is not null)
+				{
+					_logger.LogInformation($"there is allready username {userCreateDto.UserName} before ");
+					return null;
+				}
+
+				var res = await _unitOfWork.UserRepository.AddAsync(user);
+				_unitOfWork.Complete();
+				return _mapper.Map<UserDto>(res);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Error Message {ex.Message}");
+				return null;
+			}
 		}
 
 		public async Task<bool> DeleteUser(Guid id)

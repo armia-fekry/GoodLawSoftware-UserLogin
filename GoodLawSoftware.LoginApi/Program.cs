@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
-using System.Configuration;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,26 +23,33 @@ var builder = WebApplication.CreateBuilder(args);
 	builder.Logging.AddSerilog(logger);
 #endregion
 
+#region Add Cors 
 builder.Services.AddCors(policy =>
 {
-	policy.AddPolicy("CorsPolicy", opt => opt
-		.AllowAnyOrigin()
-		.AllowAnyHeader()
-		.AllowAnyMethod());
-});
+policy.AddPolicy("CorsPolicy", opt => opt
+.AllowAnyOrigin()
+.AllowAnyHeader()
+.AllowAnyMethod());
+}); 
+#endregion
+
 // Add services to the container.
 builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
 builder.Services.AddDbContext<GoodLawContext>(opt=>
 			opt.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 builder.Services.AddIdentity<User, IdentityRole<Guid>>()
 	.AddEntityFrameworkStores<GoodLawContext>();
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+#region Resister My Services 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
-builder.Services.AddTransient<IUserService,UserService>();
+builder.Services.AddTransient<IUserService, UserService>(); 
+#endregion
 
 #region JWT Config
-	builder.Services.AddAuthentication(options =>
+builder.Services.AddAuthentication(options =>
 	{
 	options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 	options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
